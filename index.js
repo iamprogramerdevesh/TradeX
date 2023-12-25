@@ -44,11 +44,12 @@ app.use("/api", tagRoutes);
 app.use("/api", tradeRoutes);
 //#endregion
 
-//static files
+//#region Static files
 app.use(express.static(path.join(__dirname, './client/build')));
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, './client/build/index.html'))
 });
+//#endregion
 
 //#region MONGOOSE SETUP
 mongoose.connect(process.env.MONGO_URL, {
