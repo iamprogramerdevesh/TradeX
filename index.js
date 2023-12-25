@@ -33,11 +33,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.json());
 app.use(cookieParser());
-//static files
-app.use(express.static(path.join(__dirname, './client/build')));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, './client/build/index.html'))
-});
 //#endregion
 
 //#region App Routes
@@ -48,6 +43,12 @@ app.use("/api", accountRoutes);
 app.use("/api", tagRoutes);
 app.use("/api", tradeRoutes);
 //#endregion
+
+//static files
+app.use(express.static(path.join(__dirname, './client/build')));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, './client/build/index.html'))
+});
 
 //#region MONGOOSE SETUP
 mongoose.connect(process.env.MONGO_URL, {
