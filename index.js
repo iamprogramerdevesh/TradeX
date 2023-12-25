@@ -34,9 +34,9 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.json());
 app.use(cookieParser());
 //static files
-app.use(express.static(path.join(__dirname, '../client/build')));
+app.use(express.static(path.join(__dirname, './client/build')));
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build/index.html'))
+  res.sendFile(path.join(__dirname, './client/build/index.html'))
 });
 //#endregion
 
