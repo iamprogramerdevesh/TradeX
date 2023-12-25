@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunktradex=self.webpackChunktradex||[]).push([[169],{169:function(e,t,n){n.r(t);n(7313);var r=n(6417);t.default=function(){return(0,r.jsx)(r.Fragment,{})}}}]);
