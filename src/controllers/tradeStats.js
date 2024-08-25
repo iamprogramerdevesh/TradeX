@@ -122,7 +122,7 @@ export const getWeeklyPnL = async (req, res) => {
         const dayMap = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
         getStats.forEach(stat => {
             // Convert the day number to a day name
-            let dayName = dayMap[stat.Day];
+            let dayName = dayMap[stat.Day - 1];
 
             // Find the corresponding day in the daysOfWeek array
             let dayOfWeek = daysOfWeek.find(day => day.Day === dayName);
