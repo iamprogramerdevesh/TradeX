@@ -79,7 +79,7 @@ export const getWeeklyPnL = async (req, res) => {
     }));
 
     const startDate = new Date();
-    startDate.setDate(today.getDate() - 6);
+    startDate.setDate(today.getDate() - 7);
     startDate.setHours(0, 0, 0, 0);
 
     const getStats = await TradeJournal.aggregate([
@@ -120,9 +120,9 @@ export const getWeeklyPnL = async (req, res) => {
     let totalNetPnL = 0;
     if (getStats.length > 0) {
         const dayMap = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        getStats.forEach(stat => {
+        getStats.forEach((stat, index) => {
             // Convert the day number to a day name
-            let dayName = dayMap[stat.Day - 1];
+            let dayName = dayMap[index];
 
             // Find the corresponding day in the daysOfWeek array
             let dayOfWeek = daysOfWeek.find(day => day.Day === dayName);
@@ -136,8 +136,8 @@ export const getWeeklyPnL = async (req, res) => {
     }
 
     const netPnl = daysOfWeek?.map(day => day.NetPnl)?.reverse();
-    const categories = daysOfWeek?.map(day => day.Day)?.reverse();
-    const weeklyReturns = parseFloat((totalNetPnL / TotalBalance) * 100).toFixed(2);
+    const categories = [...dayMap];
+    const weeklyReturns = Number(parseFloat((totalNetPnL / TotalBalance) * 100).toFixed(2));
 
     return res.status(200).json({
         success: true,
