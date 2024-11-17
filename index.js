@@ -45,7 +45,7 @@ app.use("/api", tradeRoutes);
 //#endregion
 
 //#region MONGOOSE SETUP
-mongoose.connect(process.env.MONGO_LOCAL_URL, {
+mongoose.connect(process.env.MONGO_URL, {
   dbName: process.env.DATABASE_NAME
 }).then(() => {
   app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
