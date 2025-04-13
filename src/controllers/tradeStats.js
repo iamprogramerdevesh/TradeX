@@ -70,23 +70,13 @@ export const getWeeklyPnL = async (req, res) => {
 
     const { TotalBalance = 0 } = account || [];
 
-    const dayMap = [];
+    const dayMap = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
     const day = today.getDay();
-    const daysOfWeek = [0, 1, 2, 3, 4, 5, 6].map(dayIndex => {
-        const date = new Date();
-        date.setDate(date.getDate() - dayIndex);
-    
-        let day = date.toDateString().split(" ");
-        day = day[0];
-    
-        dayMap.push(day);
-        return {
-            Day: day,
-            NetPnl: 0,
-        }
-    });
+    const daysOfWeek = [0, 1, 2, 3, 4, 5, 6].map(dayIndex => ({
+        Day: dayMap[(day + 6 - dayIndex) % 7],
+        NetPnl: 0,
+    }));
 
     const startDate = new Date();
     startDate.setDate(today.getDate() - 7);
@@ -129,10 +119,10 @@ export const getWeeklyPnL = async (req, res) => {
 
     let totalNetPnL = 0;
     if (getStats.length > 0) {
-        // const dayMap = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const dayMap = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
         getStats.forEach((stat, index) => {
             // Convert the day number to a day name
-            let dayName = dayMap[stat.Day - 1];
+            let dayName = dayMap[index];
 
             // Find the corresponding day in the daysOfWeek array
             let dayOfWeek = daysOfWeek.find(day => day.Day === dayName);
@@ -145,14 +135,14 @@ export const getWeeklyPnL = async (req, res) => {
         });
     }
 
-    const netPnl = daysOfWeek?.map(day => parseFloat(day.NetPnl).toFixed(2));
-    const categories = [...dayMap?.reverse()];
+    const netPnl = daysOfWeek?.map(day => day.NetPnl)?.reverse();
+    const categories = [...dayMap];
     const weeklyReturns = Number(parseFloat((totalNetPnL / TotalBalance) * 100).toFixed(2));
 
     return res.status(200).json({
         success: true,
         weeklyPnl: {
-            totalNetPnL: parseFloat(totalNetPnL).toFixed(2),
+            totalNetPnL,
             weeklyReturns,
             netPnl,
             categories
@@ -226,8 +216,8 @@ export const getMonthlyPnLAndRevenue = async (req, res) => {
         });
     }
 
-    const TotalNetPnL = monthlyStats?.map(value => parseFloat(value.TotalNetPnL).toFixed(2));
-    const TotalRevenue = monthlyStats?.map(value => parseFloat(value.TotalRevenue).toFixed(2));
+    const TotalNetPnL = monthlyStats?.map(value => value.TotalNetPnL);
+    const TotalRevenue = monthlyStats?.map(value => value.TotalRevenue);
 
     return res.status(200).json({
         success: true,
@@ -257,8 +247,8 @@ export const getDailyPnLAndReturns = async (req, res) => {
         journalDates.push(convertedDate);
     });
 
-    const TotalNetPnl = getStats?.map(trade => parseFloat(trade.TotalNetPnL).toFixed(2));
-    const TotalRoi = getStats?.map(trade => parseFloat(trade.TotalRoi).toFixed(2));
+    const TotalNetPnl = getStats?.map(trade => trade.TotalNetPnL);
+    const TotalRoi = getStats?.map(trade => trade.TotalRoi);
 
     res.status(200).json({
         success: true,

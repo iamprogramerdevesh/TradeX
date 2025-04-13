@@ -9,6 +9,7 @@ import Accounts from '../models/accounts.js';
 import { AddUpdateTradeStats } from './tradeStats.js';
 import { AddTradeJournal } from './tradeJournal.js';
 import { decrypt } from '../helpers/main.js';
+import { calculateFeesByExchange } from '../helpers/fees.js';
 
 /* Inserting/Updating TradeDetails */
 export const AddUpdateTrade = async (req, res, next) => {
@@ -27,7 +28,7 @@ export const AddUpdateTrade = async (req, res, next) => {
             req.body.UserId = UserId;
             req.body.AccountId = AccountId;
             
-            let Fees = total_fees == "" || total_fees == undefined ? 0 : total_fees;
+            let Fees = total_fees == "" || total_fees == undefined ? calculateFeesByExchange(Broker, EntryPrice, ExitPrice, Quantity) : total_fees;
             req.body.Fees = Fees;
 
             const accountDetails = await Accounts.findOne({ AccountId });
