@@ -13,7 +13,6 @@ import helmet from "helmet";
 import { ErrorHandler } from "./src/middleware/catchError.js";
 import corsOptions from "./src/config/corsOptions.js";
 import credentials from "./src/config/corsCredentials.js";
-import helmetConfig from "./src/config/helmet.js";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import path from "path";
@@ -26,7 +25,7 @@ const __dirname = dirname(__filename);
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 6000;
-app.use(helmetConfig);
+app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(credentials);
 app.use(cors(corsOptions));
@@ -48,13 +47,9 @@ app.use("/api", tradeRoutes);
 //#endregion
 
 //#region Static files
-app.use(express.static(path.join(__dirname, "./landing")));
-app.use("/app", express.static(path.join(__dirname, "./client/build")));
-app.get("/app/*", (req, res) => {
-  res.sendFile(path.join(__dirname, './client/build/index.html'))
-});
+app.use(express.static(path.join(__dirname, './client/build')));
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "./landing/index.html"))
+  res.sendFile(path.join(__dirname, './client/build/index.html'))
 });
 //#endregion
 
