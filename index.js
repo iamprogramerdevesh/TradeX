@@ -48,8 +48,12 @@ app.use("/api", tradeRoutes);
 
 //#region Static files
 app.use(express.static(path.join(__dirname, './client/build')));
+app.use(express.static(path.join(__dirname, "./landing")));
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, './client/build/index.html'))
+});
+app.get("/landing-page/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "./landing/index.html"))
 });
 //#endregion
 
